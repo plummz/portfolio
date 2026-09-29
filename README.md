@@ -6,6 +6,8 @@ Built with Next.js, Tailwind CSS, GSAP (ScrollTrigger + SplitText), Motion, Leni
 
 ## Run it
 
+On Windows, double-click **Open Portfolio.cmd**. Or from a terminal:
+
 ```bash
 npm install
 npm run dev
