@@ -1,21 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Instrument_Serif, JetBrains_Mono } from "next/font/google";
-import Cursor from "@/components/Cursor";
-import Preloader from "@/components/Preloader";
+import { Anybody, Atkinson_Hyperlegible_Next, Caveat, JetBrains_Mono } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
+import { LensProvider } from "@/lib/lens";
 import "./globals.css";
 
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+const anybody = Anybody({
+  variable: "--font-anybody",
+  subsets: ["latin"],
+  axes: ["wdth"],
+  display: "swap",
+});
+
+const atkinson = Atkinson_Hyperlegible_Next({
+  variable: "--font-atkinson",
   subsets: ["latin"],
   display: "swap",
 });
 
-const instrument = Instrument_Serif({
-  variable: "--font-instrument",
+const caveat = Caveat({
+  variable: "--font-caveat",
   subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -31,41 +35,40 @@ const site = process.env.VERCEL_PROJECT_PRODUCTION_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(site),
-  title: "John Rey Marquillero · UX Engineer, Writer & Researcher",
+  title: "John Rey Marquillero, UX engineer, writer and researcher",
   description:
-    "Portfolio of John Rey Marquillero, a UX engineer, writer and researcher from the Philippines. Study Arena, BOCO-FI and more.",
+    "I make screens people get through on the first try. Case studies: Study Arena, a calm study app, and BOCO-FI, a bottle-recycling kiosk.",
   openGraph: {
     title: "John Rey Marquillero",
-    description: "UX Engineer, UX Writer and UX Researcher. Come see what I've built.",
+    description:
+      "UX engineer, writer and researcher from the Philippines. Peel back the research, the words and the build.",
     images: ["/img/john-portrait.webp"],
     type: "website",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0d0c11",
+  themeColor: "#f7f8fc",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      data-lens="finished"
       suppressHydrationWarning
-      className={`${bricolage.variable} ${instrument.variable} ${jetbrains.variable}`}
+      className={`${anybody.variable} ${atkinson.variable} ${caveat.variable} ${jetbrains.variable}`}
     >
       <head>
-        {/* skip the intro screen before first paint on repeat visits */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(sessionStorage.getItem("jr-intro")==="1"||matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("intro-seen")}catch(e){}`,
+            __html: `try{var l=new URLSearchParams(location.search).get("lens");if(l==="research"||l==="words"||l==="build")document.documentElement.dataset.lens=l}catch(e){}`,
           }}
         />
       </head>
       <body>
-        <Preloader />
         <SmoothScroll />
-        <Cursor />
-        {children}
+        <LensProvider>{children}</LensProvider>
       </body>
     </html>
   );
